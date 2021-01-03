@@ -55,6 +55,15 @@ const main = async () => {
     // countryTimeZones.innerHTML = country.timezones[0];
     countryTimeZones.innerHTML = `<span class="country-timezone-title">Country Timezone :</span> ${country.timezones[0]}`; // Template-String syntax
 
+    //create div to display country-population
+    const countryPopulation = document.createElement('div')
+    countryPopulation.className = 'country-population'
+    countryPopulation.innerHTML= `<span class="country-popolation-title">Country Population : </span>${country.population}`; // Template-String syntax
+
+    //create div to display currency-symbol
+    const countryCurrencySymbol = document.createElement('div')
+    countryCurrencySymbol.classname = 'country-currencies'
+    countryCurrencySymbol.innerHTML = `<span class="Country-currency-symbol-title">Country-currency-symbol : </span>${country.currencies[0].symbol}`; // Template-String syntax
 
     // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-capital
 
@@ -64,6 +73,8 @@ const main = async () => {
     countryCard.appendChild(countryFlag)
     countryCard.appendChild(countryCapital)
     countryCard.appendChild(countryTimeZones)
+    countryCard.appendChild(countryPopulation)
+    countryCard.appendChild(countryCurrencySymbol)
     
     rootDOMElement.appendChild(countryCard)
 
