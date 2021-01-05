@@ -1,4 +1,6 @@
 const main = async () => {
+  const API_KEY = 'AIzaSyAq3WKVwUzBZovzuiCo-VsP1bX1uih6Dag';
+
   // xml-http request to a web-server to fetch data, here web-server name is restcountries.eu
   const fetchCountriesList = async () => {
     // fetch('https://restcountries.eu/rest/v2/all')
@@ -32,7 +34,7 @@ const main = async () => {
 
 
     // create div to display country-capital <p class="country-capital">text</p>
-    const countryCapital = document.createElement('p');
+    const countryCapital = document.createElement('h1');
     countryCapital.className = 'country-capital'
     // <span class="country-capital-title">text</span>
     // const countryCapitalTitle = document.createElement('span')
@@ -44,9 +46,9 @@ const main = async () => {
     // countryCapital.append(country.capital)
 
     // countryCapital.innerHTML = countryCapitalTitle.concat(country.capital);
-    // countryCapital.innerHTML = 'Country Capital City: '.concat(country.capital);
+    // countryCapital.innerHTML = 'Country Capital City: '. (country.capital);
     // countryCapital.innerHTML = 'Country Capital City: ' + country.capital;
-    countryCapital.innerHTML = `<span class="country-capital-title">Country Capital City </span> ${country.capital}`;
+    countryCapital.innerHTML = `<span class="country-capital-title">Country Capital City : </span> ${country.capital}`;
 
 
     //create div to display country-timezone
@@ -58,12 +60,32 @@ const main = async () => {
     //create div to display country-population
     const countryPopulation = document.createElement('div')
     countryPopulation.className = 'country-population'
-    countryPopulation.innerHTML= `<span class="country-popolation-title">Country Population : </span>${country.population}`; // Template-String syntax
+    countryPopulation.innerHTML= `<span class="country-popolation-title">Country Population : </span>${(country.population).toLocaleString()}`; // Template-String syntax
 
     //create div to display currency-symbol
-    const countryCurrencySymbol = document.createElement('div')
-    countryCurrencySymbol.classname = 'country-currencies'
-    countryCurrencySymbol.innerHTML = `<span class="Country-currency-symbol-title">Country-currency-symbol : </span>${country.currencies[0].symbol}`; // Template-String syntax
+    const countryCurrencySymbol = document.createElement('h3')
+    countryCurrencySymbol.className = 'country-currencies'
+    countryCurrencySymbol.innerHTML = `<span class="Country-currency-title">Country Currency Symbol : </span>${country.currencies[0].symbol || country.currencies[0].code}`; // Template-String syntax
+
+    // create div to display location (lat-lng)
+    const countryLocation = document.createElement('div')
+    countryLocation.className = 'country-location'
+    countryLocation.innerHTML = `<span class="country-location-title">Country Location : </span>${country.latlng}`;
+
+    const countryMap = document.createElement('iframe')
+    countryMap.className = 'country-map'
+    countryMap.src = `https://www.google.com/maps/embed/v1/place?key=${API_KEY}&q=${country.latlng[0]},${country.latlng[1]}`
+    // countryMap.src = `https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=%C4%B0ikaneir+(Mumma's%20Bakery)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed`
+
+    // <iframe width="100%" height="100%" class="absolute inset-0" frameborder="0" title="map" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=%C4%B0ikaneir+(Mumma's%20Bakery)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" style="filter: scale(100) contrast(1.2) opacity(0.4);"></iframe>
+
+
+
+    // <iframe src="https://www.google.com/maps/embed/v1/place?key=<YOUR API KEY>&q=71.0378379,-110.05995059999998"></iframe>
+
+
+    // AIzaSyAq3WKVwUzBZovzuiCo-VsP1bX1uih6Dag
+
 
     // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-capital
 
@@ -75,10 +97,10 @@ const main = async () => {
     countryCard.appendChild(countryTimeZones)
     countryCard.appendChild(countryPopulation)
     countryCard.appendChild(countryCurrencySymbol)
+    countryCard.appendChild(countryLocation)
+    countryCard.appendChild(countryMap)
     
     rootDOMElement.appendChild(countryCard)
-
-
   })
 }
 
