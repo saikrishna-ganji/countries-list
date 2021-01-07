@@ -1,3 +1,8 @@
+/**
+ * Links
+ *  https://wiki.openstreetmap.org/wiki/OpenLayers_Simple_Example
+ *  https://restcountries.eu/rest/v2/region/asia
+ */
 const main = async () => {
   const API_KEY = 'AIzaSyAq3WKVwUzBZovzuiCo-VsP1bX1uih6Dag';
 
@@ -15,7 +20,7 @@ const main = async () => {
 
   const rootDOMElement = document.getElementById('root')
 
-  countriesList.forEach((country) => {
+  countriesList.forEach((country, key) => {
     console.log('country -> ', country);
 
     // create div to display country-information
@@ -72,25 +77,7 @@ const main = async () => {
     countryLocation.className = 'country-location'
     countryLocation.innerHTML = `<span class="country-location-title">Country Location : </span>${country.latlng}`;
 
-    const countryMap = document.createElement('iframe')
-    countryMap.className = 'country-map'
-    countryMap.src = `https://www.google.com/maps/embed/v1/place?key=${API_KEY}&q=${country.latlng[0]},${country.latlng[1]}`
-    // countryMap.src = `https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=%C4%B0ikaneir+(Mumma's%20Bakery)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed`
-
-    // <iframe width="100%" height="100%" class="absolute inset-0" frameborder="0" title="map" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=%C4%B0ikaneir+(Mumma's%20Bakery)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" style="filter: scale(100) contrast(1.2) opacity(0.4);"></iframe>
-
-
-
-    // <iframe src="https://www.google.com/maps/embed/v1/place?key=<YOUR API KEY>&q=71.0378379,-110.05995059999998"></iframe>
-
-
-    // AIzaSyAq3WKVwUzBZovzuiCo-VsP1bX1uih6Dag
-
-
-    // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-capital
-
-    // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-timezone
-
+    // append to country-card.
     countryCard.appendChild(countryName)
     countryCard.appendChild(countryFlag)
     countryCard.appendChild(countryCapital)
@@ -98,9 +85,35 @@ const main = async () => {
     countryCard.appendChild(countryPopulation)
     countryCard.appendChild(countryCurrencySymbol)
     countryCard.appendChild(countryLocation)
+  
+
+    const countryMap = document.createElement('div')
+    const id = `country-map-${key}`;
+    countryMap.id = id;
+    countryMap.className = 'country-map'
+    countryMap.style = "height: 400px;"
+
+    // append to country-card & append to root-element.
     countryCard.appendChild(countryMap)
-    
     rootDOMElement.appendChild(countryCard)
+
+    // creating map-object with lat-lang to append to country-map div.
+    map = new OpenLayers.Map(id);
+    const mapnik         = new OpenLayers.Layer.OSM();
+    const fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+    const toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+    const position       = new OpenLayers.LonLat(country.latlng[1], country.latlng[0]).transform(fromProjection, toProjection);
+    const zoom           = 4;
+    map.addLayer(mapnik);
+    const markers = new OpenLayers.Layer.Markers( "Markers" );
+    map.addLayer(markers);
+    markers.addMarker(new OpenLayers.Marker(position));
+    map.setCenter(position, zoom);
+
+    // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-capital
+
+    // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-timezone
+
   })
 }
 

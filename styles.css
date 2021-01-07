@@ -1,7 +1,6 @@
 #root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(545px, 1fr));
 }
 
 .country-card {
@@ -75,6 +74,25 @@
   font-size: 20px;
   font-weight: bold;
 }
-
-
+div.country-map.olMap {
+  margin-top: 10px !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.olControlAttribution {
+  display: none;
+}
+.olButton {
+  width: 30px !important;
+  height: 30px !important;
+  margin-bottom: 3px !important;
+  font-size: 25px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.olAlphaImg {
+  width: 30px !important;
+  height: 30px !important;
+}
 
