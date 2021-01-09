@@ -14,16 +14,19 @@ const main = async () => {
     
     return data;
   }
+  const countriesList = await fetchCountriesList();
+  console.log('countriesList -> ', countriesList);
 
-  const renderCountries = async () => {
-    const countriesList = await fetchCountriesList();
-    console.log('countriesList -> ', countriesList)
-  
+  const clearCountries = () => {
+    const countriesDOMElement = document.getElementById('countries');
+
+    countriesDOMElement.innerHTML = '';
+  }
+
+  const renderCountries = async (list) => {
     const countriesDOMElement = document.getElementById('countries')
   
-    countriesList.forEach((country, key) => {
-      console.log('country -> ', country);
-  
+    list.forEach((country, key) => {
       const countryCardContainer = document.createElement('div');
       countryCardContainer.className = 'country-card-container';
   
@@ -90,7 +93,6 @@ const main = async () => {
       countryCard.appendChild(countryCurrencySymbol)
       countryCard.appendChild(countryLocation)
     
-  
       const countryMap = document.createElement('div')
       const id = `country-map-${key}`;
       countryMap.id = id;
@@ -113,22 +115,18 @@ const main = async () => {
       map.addLayer(markers);
       markers.addMarker(new OpenLayers.Marker(position));
       map.setCenter(position, zoom);
-  
-      // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-capital
-  
-      // ToDo: create div/span/p/h1/h2/h3/h4/h5 to display country-timezone
-  
     })
   }
-
-  const searchCountries = () => {
+  // creating search functionalities
+  
+  const searchCountriesUglyApproach = () => {
     const searchField = document.getElementById('search-field');
     const searchButton = document.getElementById('search-button');
 
     searchButton.addEventListener('click', () => {
       const searchText = searchField.value.toLowerCase();
 
-      // Ugly-Approach-1
+      // Ugly-Approach-1, traversing or doing operations on DOM is very expensive & performance-burden.
       document.querySelectorAll('.country-name').forEach((countryNameElement) => {
         const countryName = countryNameElement.innerText.toLowerCase();
         if (!countryName.includes(searchText)) {
@@ -143,10 +141,13 @@ const main = async () => {
   }
 
   // Ugly-Approach-1
-  const clearSearchCountries = () => {
-    const clearSearchButton = document.getElementById('search-clear-button');
-
+  const clearSearchCountriesUglyApproach = () => {
+    const clearSearchButton = document.getElementById('search-clear-button')
+    
     clearSearchButton.addEventListener('click', () => {
+      const searchField = document.getElementById('search-field');
+      searchField.value = '';
+
       document.querySelectorAll('.country-card-container').forEach((countryCardContainerElement) => {
         // by using style-css
         // countryCardContainerElement.style.display = '';
@@ -157,9 +158,40 @@ const main = async () => {
     })
   }
 
-  renderCountries();
-  searchCountries();
-  clearSearchCountries();
+  const searchCountriesBetterApproach = () => {
+    const searchField = document.getElementById('search-field');
+    const searchButton = document.getElementById('search-button');
+
+    searchButton.addEventListener('click', () => {
+      const searchText = searchField.value.toLowerCase();
+
+      const filteredCountriesList = countriesList.filter((country) => {
+        return country.name.toLowerCase().includes(searchText)
+      });
+
+      clearCountries();
+      renderCountries(filteredCountriesList);
+    });
+  }
+
+  const clearSearchCountriesBetterApproach = () => {
+    const clearSearchButton = document.getElementById('search-clear-button')
+    
+    clearSearchButton.addEventListener('click', () => {
+      const searchField = document.getElementById('search-field');
+      searchField.value = '';
+
+      clearCountries();
+      renderCountries(countriesList);
+    })
+  }
+
+  clearCountries();
+  renderCountries(countriesList);
+  // searchCountriesUglyApproach();
+  // clearSearchCountriesUglyApproach();
+  searchCountriesBetterApproach();
+  clearSearchCountriesBetterApproach();
 }
 
 main();
