@@ -33,6 +33,23 @@
   margin-left: 10px;
 }
 
+#pagination {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-row-gap: 5px;
+  grid-column-gap: 5px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.pagination-button {
+  padding: 5px;
+  cursor: pointer;
+}
+.select {
+  background-color: chocolate;
+  color: white;
+}
+
 .country-card-container {
   display: flex;
   justify-content: center;
