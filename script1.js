@@ -48,7 +48,7 @@ const main = async () => {
     for (let i = 0; i < countriesListWithLessData.length/ITEMS_PER_PAGE; i++) {
       const pageNumber = i + 1;
       const paginationButton = document.createElement('button');
-      paginationButton.className = 'pagination-button';
+      paginationButton.className = pageNumber === 1 ? 'pagination-button select' : 'pagination-button';
       paginationButton.id = `pagination-button${i}`;
       paginationButton.innerHTML = pageNumber;
 
@@ -57,7 +57,6 @@ const main = async () => {
       paginationButton.addEventListener('click', async () => {
         const startIndex = ITEMS_PER_PAGE * i;
         const endIndex = startIndex + ITEMS_PER_PAGE;
-
         
         // ToDo: Find method to add class-name to all elements at once instead of using for-loop
         const previouslySelectedButton = document.querySelector('.pagination-button.select');
@@ -68,22 +67,28 @@ const main = async () => {
         paginationButton.classList.add('select');
 
         console.log('page ->', pageNumber, 'startIndex -> ', startIndex, 'endIndex -> ', endIndex);
-        const countriesListByCodes = await fetchCountriesByCodes(countryCodesList.slice(startIndex, endIndex));
+        countriesList = await fetchCountriesByCodes(countryCodesList.slice(startIndex, endIndex));
 
         clearCountries();
-        renderCountries(countriesListByCodes);
+        renderCountries();
       })
     }
   }
 
+  const initialLoadForFirstPage = async () => {
+    countriesList = await fetchCountriesByCodes(countryCodesList.slice(0, ITEMS_PER_PAGE));
+
+    clearCountries();
+    renderCountries();
+  }
   const clearCountries = () => {
     const countriesDOMElement = document.getElementById('countries');
 
     countriesDOMElement.innerHTML = '';
   }
 
-  const renderCountries = async (list) => {
-    const countriesDOMElement = document.getElementById('countries')
+  const renderCountries = async (list = countriesList) => {
+    const countriesDOMElement = document.getElementById('countries');
   
     list.forEach((country, key) => {
       const countryCardContainer = document.createElement('div');
@@ -91,23 +96,23 @@ const main = async () => {
   
       // create div to display country-information
       const countryCard = document.createElement('div');
-      countryCard.className = 'country-card'
+      countryCard.className = 'country-card';
       countryCardContainer.appendChild(countryCard);
   
       // create div to display country-name.
-      const countryName = document.createElement("h1")
-      countryName.className = "country-name"
+      const countryName = document.createElement("h1");
+      countryName.className = "country-name";
       countryName.innerHTML = country.name;
   
       // create img to display country-flag.
-      const countryFlag = document.createElement('img')
-      countryFlag.className = 'country-flag'
+      const countryFlag = document.createElement('img');
+      countryFlag.className = 'country-flag';
       countryFlag.src = country.flag;
   
   
       // create div to display country-capital <p class="country-capital">text</p>
       const countryCapital = document.createElement('h1');
-      countryCapital.className = 'country-capital'
+      countryCapital.className = 'country-capital';
       // <span class="country-capital-title">text</span>
       // const countryCapitalTitle = document.createElement('span')
       // countryCapitalTitle.className = 'country-capital-title'
@@ -244,13 +249,14 @@ const main = async () => {
       searchField.value = '';
 
       clearCountries();
-      renderCountries(countriesList);
+      renderCountries();
     })
   }
 
   clearCountries();
   renderPagination();
-  renderCountries(countriesList);
+  renderCountries();
+  initialLoadForFirstPage();
   // searchCountriesUglyApproach();
   // clearSearchCountriesUglyApproach();
   searchCountriesBetterApproach();
